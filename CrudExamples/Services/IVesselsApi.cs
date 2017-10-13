@@ -20,6 +20,6 @@ namespace CrudExamples.Services
         Task<VesselDto> EditVesselAsync(int id, [Body] VesselDto vessel);
 
         [Delete("/api/vessels/{id}")]
-        Task<VesselDto> RemoveVesselAsync([Body] int id);
+        Task RemoveVesselAsync(int id);
     }
 }

@@ -29,7 +29,7 @@ namespace CrudExamples.ViewModels
 
             // TODO: is there any way to inspect the parameter of the command and accordingly disable command when no item is selected in the grid 
             // explicity defining a new selectedItem property in the viewmodel and trying to keep it in sync.
-            this.RemoveVesselCommand = new DelegateCommand(this.OnRemoveVessel);//, () => SelectedVessel !=null);
+            this.RemoveVesselCommand = new DelegateCommand(this.OnRemoveVessel , () => SelectedVessel !=null);
 
             this.AddVesselInteractionRequest = new InteractionRequest<VesselNotification>();
             this.EditVesselInteractionRequest = new InteractionRequest<VesselNotification>();
@@ -46,6 +46,7 @@ namespace CrudExamples.ViewModels
             {
                 selectedVessel = value;
                 RaisePropertyChanged();
+                RemoveVesselCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -85,6 +86,7 @@ namespace CrudExamples.ViewModels
             {
                 // This can be abstracted away with an InteractionRequest.
                 MessageBox.Show(ex.Message);
+
             }
             finally
             {
@@ -151,6 +153,8 @@ namespace CrudExamples.ViewModels
             2* If we use "Content = new VesselViewModel(vessel)", there's no need to implement 
                IEditableObject on VesselViewModel, because we're passing a new instance to the 
                Edit window every time and it will be discarded both on Save and Cancel.
+
+            3 * another approach is to simply send the id to the interaction request and have it deal with it.
 
             */
             this.EditVesselInteractionRequest.Raise(new VesselNotification()

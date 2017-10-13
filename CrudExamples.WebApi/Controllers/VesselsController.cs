@@ -46,7 +46,8 @@ namespace CrudExamples.WebApi.Controllers
         }
 
         [HttpDelete]
-        public async Task<IHttpActionResult> RemoveVesselAsync([FromBody] int id)
+
+        public async Task<IHttpActionResult> RemoveVesselAsync(int id)
         {
             if (!ModelState.IsValid)
             {

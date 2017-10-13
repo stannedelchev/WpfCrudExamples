@@ -39,6 +39,7 @@ namespace CrudExamples.WebApi.Models.Services
             // there is not .RemoveAsync(), 
             // should we update the interface for RemoveVessel to be synchronous ?
             this.context.Vessels.Remove(dbVessel);
+            await this.context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Vessel>> GetAllAsync()

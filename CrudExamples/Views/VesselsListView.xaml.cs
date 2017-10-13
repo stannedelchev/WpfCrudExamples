@@ -1,4 +1,5 @@
-﻿using Prism.Regions;
+﻿using CrudExamples.ViewModels;
+using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,8 @@ namespace CrudExamples.Views
         public VesselsListView()
         {
             InitializeComponent();
+
+            //(this.DataContext as VesselsListViewModel).AddingVessel += (s, e) => new Window() { Content = new EditVesselView(); ) }
         }
     }
 }
