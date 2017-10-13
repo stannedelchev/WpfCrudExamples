@@ -46,6 +46,7 @@
         <Label Grid.Row="0" Margin="20" FontSize="18">Vessels</Label>
         <DataGrid Margin="20" Grid.Row="1" x:Name="VesselsGrid"
                   ItemsSource="{Binding Vessels}"
+                  SelectedItem="{Binding SelectedVessel}"
                   IsReadOnly="True" 
                   AutoGenerateColumns="True"
                   Visibility="{Binding Items.IsEmpty, RelativeSource={RelativeSource Self}, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
@@ -65,7 +66,7 @@
 
         <StackPanel Orientation="Horizontal" Grid.Row="2" >
             <Button Content="Add new" Height="80" Margin="20" Command="{Binding AddVesselCommand}" />
-            <Button Content="Remove" Height="80" Margin="20" Command="{Binding RemoveVesselCommand}" CommandParameter="{Binding SelectedItem, ElementName=VesselsGrid}"/>
+            <Button Content="Remove" Height="80" Margin="20" Command="{Binding RemoveVesselCommand}"/>
         </StackPanel>
 
         <ProgressBar Grid.Row="0" Grid.RowSpan="3" 

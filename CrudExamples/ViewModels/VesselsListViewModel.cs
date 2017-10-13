@@ -29,18 +29,29 @@ namespace CrudExamples.ViewModels
 
             // TODO: is there any way to inspect the parameter of the command and accordingly disable command when no item is selected in the grid 
             // explicity defining a new selectedItem property in the viewmodel and trying to keep it in sync.
-            this.RemoveVesselCommand = new DelegateCommand<VesselViewModel>(this.OnRemoveVessel); 
+            this.RemoveVesselCommand = new DelegateCommand(this.OnRemoveVessel);//, () => SelectedVessel !=null);
 
             this.AddVesselInteractionRequest = new InteractionRequest<VesselNotification>();
             this.EditVesselInteractionRequest = new InteractionRequest<VesselNotification>();
             this.RemoveVesselInteractionRequest = new InteractionRequest<VesselNotification>();
         }
 
-        
+        private VesselViewModel selectedVessel;
+
+        public VesselViewModel SelectedVessel
+
+        {
+            get { return selectedVessel; }
+            set
+            {
+                selectedVessel = value;
+                RaisePropertyChanged();
+            }
+        }
 
         public DelegateCommand AddVesselCommand { get; }
         public DelegateCommand<VesselViewModel> EditVesselCommand { get; }
-        public DelegateCommand<VesselViewModel> RemoveVesselCommand { get; }
+        public DelegateCommand RemoveVesselCommand { get; }
 
         // No requirement to have two separate interaction requests when they do the same thing.
         // This approach is more useful when the requests might have different arguments or triggers/actions in the view.
@@ -81,7 +92,7 @@ namespace CrudExamples.ViewModels
             }
         }
 
-       
+
         // Implementing INavigationAware is not required if the view is not navigated to, but activated manually.
         // INavigationAware is useful for triggering InitializeAsync, so if it's not used, the appropriate approach would be 
         // to call InitializeAsync() manually when the view is loaded, either via EventTrigger+InvokeMethod or in the view's codebehind.
@@ -115,12 +126,12 @@ namespace CrudExamples.ViewModels
             });
         }
 
-        private void OnRemoveVessel(VesselViewModel selectedVessel)
+        private void OnRemoveVessel()
         {
             this.RemoveVesselInteractionRequest.Raise(new VesselNotification()
             {
-                Title = $"Remove {selectedVessel.Name}",
-                Content = selectedVessel,
+                Title = $"Remove {SelectedVessel.Name}",
+                Content = SelectedVessel,
                 EditMode = VesselNotification.EditModes.Remove
             }, _ =>
             {
