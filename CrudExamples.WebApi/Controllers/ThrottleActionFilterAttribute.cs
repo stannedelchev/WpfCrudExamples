@@ -21,6 +21,8 @@ namespace CrudExamples.WebApi.Controllers
         {
             await Task.Delay(this.DelayTimeInMilliseconds, cancellationToken);
             await base.OnActionExecutingAsync(actionContext, cancellationToken);
+
+
         }
     }
 }

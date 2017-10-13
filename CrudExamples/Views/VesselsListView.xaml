@@ -25,10 +25,13 @@
     </UserControl.Resources>
 
     <i:Interaction.Triggers>
-        <prism:InteractionRequestTrigger SourceObject="{Binding AddNewVesselInteractionRequest}">
+        <prism:InteractionRequestTrigger SourceObject="{Binding AddVesselInteractionRequest}">
             <actions:PopupMetroWindowAction IsModal="True" CenterOverAssociatedObject="True" WindowContentType="{x:Type local:EditVesselView}" WindowStyle="{StaticResource DefaultMetroWindowStyle}" />
         </prism:InteractionRequestTrigger>
         <prism:InteractionRequestTrigger SourceObject="{Binding EditVesselInteractionRequest}">
+            <actions:PopupMetroWindowAction IsModal="True" CenterOverAssociatedObject="True" WindowContentType="{x:Type local:EditVesselView}" WindowStyle="{StaticResource DefaultMetroWindowStyle}" />
+        </prism:InteractionRequestTrigger>
+        <prism:InteractionRequestTrigger SourceObject="{Binding RemoveVesselInteractionRequest}">
             <actions:PopupMetroWindowAction IsModal="True" CenterOverAssociatedObject="True" WindowContentType="{x:Type local:EditVesselView}" WindowStyle="{StaticResource DefaultMetroWindowStyle}" />
         </prism:InteractionRequestTrigger>
     </i:Interaction.Triggers>
@@ -60,7 +63,10 @@
                    Text="NO DATA. ADD A NEW VESSEL."
                    Visibility="{Binding Items.IsEmpty, ElementName=VesselsGrid, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-        <Button Content="Add new" Grid.Row="2" Height="80" Margin="20" Command="{Binding AddNewVesselCommand}" />
+        <StackPanel Orientation="Horizontal" Grid.Row="2" >
+            <Button Content="Add new" Height="80" Margin="20" Command="{Binding AddVesselCommand}" />
+            <Button Content="Remove" Height="80" Margin="20" Command="{Binding RemoveVesselCommand}" CommandParameter="{Binding SelectedItem, ElementName=VesselsGrid}"/>
+        </StackPanel>
 
         <ProgressBar Grid.Row="0" Grid.RowSpan="3" 
                      IsIndeterminate="True" 

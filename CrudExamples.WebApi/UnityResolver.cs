@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace CrudExamples.WebApi
+﻿namespace CrudExamples.WebApi
 {
     using Microsoft.Practices.Unity;
     using System;

@@ -28,7 +28,7 @@ namespace CrudExamples.ViewModels
 
         public EditVesselViewModel()
         {
-            this.SaveCommand = new DelegateCommand(this.OnSaveCommandExecuted, () => this.Vessel != null && !this.Vessel.HasErrors);
+            this.OkCommand = new DelegateCommand(this.OkCommandExecuted, () => this.Vessel != null && !this.Vessel.HasErrors);
             this.CancelCommand = new DelegateCommand(this.OnCancelCommandExecuted);
         }
 
@@ -55,7 +55,7 @@ namespace CrudExamples.ViewModels
                     this.vessel.ErrorsChanged += this.RaiseSaveCommandCanExecuteChanged;
                 }
 
-                this.SaveCommand.RaiseCanExecuteChanged();
+                this.OkCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -84,11 +84,11 @@ namespace CrudExamples.ViewModels
 
         public Action FinishInteraction { get; set; }
 
-        public DelegateCommand SaveCommand { get; }
+        public DelegateCommand OkCommand { get; }
 
         public DelegateCommand CancelCommand { get; }
 
-        private async void OnSaveCommandExecuted()
+        private async void OkCommandExecuted()
         {
             this.Vessel?.EndEdit();
 
@@ -104,6 +104,9 @@ namespace CrudExamples.ViewModels
                         break;
                     case VesselNotification.EditModes.Edit:
                         await service.EditVesselAsync(this.Vessel.Id, this.ToDto());
+                        break;
+                    case VesselNotification.EditModes.Remove:
+                        await service.RemoveVesselAsync(this.Vessel.Id);
                         break;
                     default:
                         throw new NotImplementedException();
@@ -128,7 +131,7 @@ namespace CrudExamples.ViewModels
 
         private void RaiseSaveCommandCanExecuteChanged(object sender, DataErrorsChangedEventArgs args)
         {
-            this.SaveCommand.RaiseCanExecuteChanged();
+            this.OkCommand.RaiseCanExecuteChanged();
         }
 
         private VesselDto ToDto()

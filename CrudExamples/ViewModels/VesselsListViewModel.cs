@@ -23,20 +23,30 @@ namespace CrudExamples.ViewModels
 
         public VesselsListViewModel()
         {
-            this.AddNewVesselCommand = new DelegateCommand(this.OnAddNewVesselCommandExecuted);
-            this.EditVesselCommand = new DelegateCommand<VesselViewModel>(this.OnEditVesselCommandExecuted);
+            this.AddVesselCommand = new DelegateCommand(this.OnAddVessel);
+            this.EditVesselCommand = new DelegateCommand<VesselViewModel>(this.OnEditVessel);
 
-            this.AddNewVesselInteractionRequest = new InteractionRequest<VesselNotification>();
+
+            // TODO: is there any way to inspect the parameter of the command and accordingly disable command when no item is selected in the grid 
+            // explicity defining a new selectedItem property in the viewmodel and trying to keep it in sync.
+            this.RemoveVesselCommand = new DelegateCommand<VesselViewModel>(this.OnRemoveVessel); 
+
+            this.AddVesselInteractionRequest = new InteractionRequest<VesselNotification>();
             this.EditVesselInteractionRequest = new InteractionRequest<VesselNotification>();
+            this.RemoveVesselInteractionRequest = new InteractionRequest<VesselNotification>();
         }
 
-        public DelegateCommand AddNewVesselCommand { get; }
+        
+
+        public DelegateCommand AddVesselCommand { get; }
         public DelegateCommand<VesselViewModel> EditVesselCommand { get; }
+        public DelegateCommand<VesselViewModel> RemoveVesselCommand { get; }
 
         // No requirement to have two separate interaction requests when they do the same thing.
         // This approach is more useful when the requests might have different arguments or triggers/actions in the view.
-        public InteractionRequest<VesselNotification> AddNewVesselInteractionRequest { get; set; }
+        public InteractionRequest<VesselNotification> AddVesselInteractionRequest { get; set; }
         public InteractionRequest<VesselNotification> EditVesselInteractionRequest { get; set; }
+        public InteractionRequest<VesselNotification> RemoveVesselInteractionRequest { get; set; }
 
         public bool IsLoading
         {
@@ -71,6 +81,7 @@ namespace CrudExamples.ViewModels
             }
         }
 
+       
         // Implementing INavigationAware is not required if the view is not navigated to, but activated manually.
         // INavigationAware is useful for triggering InitializeAsync, so if it's not used, the appropriate approach would be 
         // to call InitializeAsync() manually when the view is loaded, either via EventTrigger+InvokeMethod or in the view's codebehind.
@@ -91,11 +102,11 @@ namespace CrudExamples.ViewModels
         }
         #endregion
 
-        private void OnAddNewVesselCommandExecuted()
+        private void OnAddVessel()
         {
-            this.AddNewVesselInteractionRequest.Raise(new VesselNotification()
+            this.AddVesselInteractionRequest.Raise(new VesselNotification()
             {
-                Title = "Add new vessel",
+                Title = "Add vessel",
                 Content = new VesselViewModel(),
                 EditMode = VesselNotification.EditModes.Add
             }, _ =>
@@ -104,14 +115,33 @@ namespace CrudExamples.ViewModels
             });
         }
 
-        private void OnEditVesselCommandExecuted(VesselViewModel vessel)
+        private void OnRemoveVessel(VesselViewModel selectedVessel)
         {
-            // We can specify the notification content in two ways here:
-            // 1* If we use "Content = vessel" and pass the selected vessel directly, any intermediate changes in the Edit window will be applied 
-            //    automatically to the List window (they're both binding to the same instance). Whenever we cancel (i.e. use IEditableObject.CancelEdit())
-            //    the changes will be reverted and the List window will be back to its original state.
-            // 2* If we use "Content = new VesselViewModel(vessel)", there's no need to implement IEditableObject on VesselViewModel, because 
-            //    we're passing a new instance to the Edit window every time and it will be discarded both on Save and Cancel.
+            this.RemoveVesselInteractionRequest.Raise(new VesselNotification()
+            {
+                Title = $"Remove {selectedVessel.Name}",
+                Content = selectedVessel,
+                EditMode = VesselNotification.EditModes.Remove
+            }, _ =>
+            {
+                var __ = this.InitializeAsync();
+            });
+        }
+        private void OnEditVessel(VesselViewModel vessel)
+        {
+            /*
+            We can specify the notification content in two ways here:
+
+            1* If we use "Content = vessel" and pass the selected vessel directly, 
+               any intermediate changes in the Edit window will be applied automatically to the List window 
+               (they're both binding to the same instance). Whenever we cancel (i.e. use IEditableObject.CancelEdit())
+               the changes will be reverted and the List window will be back to its original state.
+            
+            2* If we use "Content = new VesselViewModel(vessel)", there's no need to implement 
+               IEditableObject on VesselViewModel, because we're passing a new instance to the 
+               Edit window every time and it will be discarded both on Save and Cancel.
+
+            */
             this.EditVesselInteractionRequest.Raise(new VesselNotification()
             {
                 Title = $"Edit {vessel.Name}",

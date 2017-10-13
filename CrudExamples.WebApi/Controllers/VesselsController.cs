@@ -45,6 +45,19 @@ namespace CrudExamples.WebApi.Controllers
             return this.Ok(result);
         }
 
+        [HttpDelete]
+        public async Task<IHttpActionResult> RemoveVesselAsync([FromBody] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return this.BadRequest();
+            }
+             
+            await this.vesselsService.RemoveVesselAsync(id);
+ 
+            return this.Ok();
+        }
+
 
         [HttpPut]
         public async Task<IHttpActionResult> EditVesselAsync(int id, [FromBody] VesselDto input)

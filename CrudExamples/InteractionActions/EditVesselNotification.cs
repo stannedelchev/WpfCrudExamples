@@ -22,7 +22,8 @@ namespace CrudExamples.InteractionActions
         {
             NotSet = 0,
             Add = 1,
-            Edit = 2
+            Edit = 2,
+            Remove = 3
         }
     }
 }

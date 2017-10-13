@@ -34,8 +34,8 @@
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="Save"  HorizontalAlignment="Left" Width="80" Background="{StaticResource AccentColorBrush}"
-                        Command="{Binding SaveCommand}"/>
+                <Button Grid.Column="0" Content="OK"  HorizontalAlignment="Left" Width="80" Background="{StaticResource AccentColorBrush}"
+                        Command="{Binding OkCommand}"/>
                 <Button Grid.Column="1" Content="Cancel" HorizontalAlignment="Right" Width="80"
                         Command="{Binding CancelCommand}" />
             </Grid>

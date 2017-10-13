@@ -13,5 +13,7 @@ namespace CrudExamples.WebApi.Models.Services
         Task UpdateVesselAsync(int id, Vessel vessel);
 
         Task<IEnumerable<Vessel>> GetAllAsync();
+
+        Task RemoveVesselAsync(int vesselId);
     }
 }

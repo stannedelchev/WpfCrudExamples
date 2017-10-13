@@ -1,11 +1,9 @@
 ﻿using CrudExamples.WebApi.Models.Database;
 using CrudExamples.WebApi.Models.Exceptions;
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace CrudExamples.WebApi.Models.Services
 {
@@ -28,6 +26,19 @@ namespace CrudExamples.WebApi.Models.Services
             // business object needs to be updated with proper database id, as we're using different BO and DB classes and instances.
             vessel.Id = entity.Id;
             return vessel.Id;
+        }
+
+        public async Task RemoveVesselAsync(int vesselId)
+        {
+            var dbVessel = await this.context.Vessels.FindAsync(vesselId);
+            if (dbVessel == null)
+            {
+                throw new VesselNotFoundException($"Could not find vessel with id #{vesselId}");
+            }
+
+            // there is not .RemoveAsync(), 
+            // should we update the interface for RemoveVessel to be synchronous ?
+            this.context.Vessels.Remove(dbVessel);
         }
 
         public async Task<IEnumerable<Vessel>> GetAllAsync()
